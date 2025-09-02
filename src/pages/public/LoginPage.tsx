@@ -14,6 +14,9 @@ import type { ActionState } from '../../interfaces';
 import { createInitialState, hanleZodError } from '../../helpers';
 import { useAlert, useAuth, useAxios } from '../../hooks';
 import { Link, useNavigate } from 'react-router-dom';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { IconButton, InputAdornment } from '@mui/material';
+import { useState } from 'react';
 
 export type LoginActionState = ActionState<LoginFormValues>;
 const initialState = createInitialState<LoginFormValues>();
@@ -21,6 +24,7 @@ const initialState = createInitialState<LoginFormValues>();
 
 export const LoginPage = () => {
   const axios = useAxios();
+  const [showPwd, setShowPwd] = useState(false);
   const { login } = useAuth();
   const { showAlert } = useAlert();
   const navigate = useNavigate();
@@ -108,11 +112,20 @@ export const LoginPage = () => {
               required
               fullWidth
               label="Password"
-              type="password"
+              type={showPwd ? 'text' : 'password'}
               disabled={isPending}
               defaultValue={state?.formData?.password}
               error={!!state?.errors?.password}
               helperText={state?.errors?.password}
+              InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton aria-label="toggle password" edge="end" onClick={() => setShowPwd(v=>!v)}>
+                    {showPwd ? <VisibilityOff/> : <Visibility/>}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
             />
             <Button
               type="submit"

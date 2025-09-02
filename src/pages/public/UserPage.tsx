@@ -13,11 +13,16 @@ import { createInitialState, hanleZodError } from '../../helpers';
 import { useAlert, useAxios } from '../../hooks';
 import { Link, useNavigate } from 'react-router-dom';
 import { useActionState } from 'react';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { IconButton, InputAdornment } from '@mui/material';
+import { useState } from 'react';
 
 type UserActionState = ActionState<UserFormValues>;
 const initialState = createInitialState<UserFormValues>();
 export const UserPage = () => {
   const axios = useAxios();
+  const [showPwd, setShowPwd] = useState(false);
+  const [showPwd2, setShowPwd2] = useState(false);
   const { showAlert } = useAlert();
   const navigate = useNavigate();
 
@@ -100,11 +105,20 @@ export const UserPage = () => {
               required
               fullWidth
               label="Password"
-              type="password"
+              type={showPwd ? 'text' : 'password'}
               disabled={isPending}
               defaultValue={state?.formData?.password}
               error={!!state?.errors?.password}
               helperText={state?.errors?.password}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setShowPwd(v=>!v)} edge="end">
+                      {showPwd ? <VisibilityOff/> : <Visibility/>}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
             />
             <TextField
               name="confirmPassword"
@@ -112,11 +126,20 @@ export const UserPage = () => {
               required
               fullWidth
               label="Repetir password"
-              type="password"
+              type={showPwd2 ? 'text' : 'password'}
               disabled={isPending}
               defaultValue={state?.formData?.confirmPassword}
               error={!!state?.errors?.confirmPassword}
               helperText={state?.errors?.confirmPassword}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setShowPwd2(v=>!v)} edge="end">
+                      {showPwd2 ? <VisibilityOff/> : <Visibility/>}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
             />
             <Button
               type="submit"
